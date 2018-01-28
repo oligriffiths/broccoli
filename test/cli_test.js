@@ -203,6 +203,14 @@ describe('cli', function() {
         });
       });
     });
+    context('with param --overwrite', function() {
+      it('removes previous build', function() {
+        fs.mkdirSync('dist');
+        return cli(['node', 'broccoli', 'build', '--output-path', 'dist']).then(() => {
+          chai.expect(exitStub).to.be.calledWith(0);
+        });
+      });
+    });
   });
 
   describe('serve', function() {
