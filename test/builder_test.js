@@ -18,6 +18,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const multidepRequire = require('multidep')('test/multidep.json');
 const semver = require('semver');
+const heimdall = require('heimdalljs');
 
 const Plugin = multidepRequire('broccoli-plugin', '1.3.0');
 const broccoliSource = multidepRequire('broccoli-source', '1.1.0');
@@ -59,6 +60,10 @@ describe('Builder', function() {
   }
 
   let builder;
+
+  beforeEach(function() {
+    heimdall._reset();
+  });
 
   afterEach(function() {
     sinon.restore();
@@ -893,6 +898,115 @@ describe('Builder', function() {
               });
           });
         });
+    });
+  });
+
+  describe('heimdall stats', function() {
+    it('produces stats', function(done) {
+      const veggies = new plugins.Veggies(['test/fixtures/basic'], {
+        annotation: 'Eat your greens',
+      });
+      const noop = new plugins.Noop(['test/fixtures/basic']);
+      const merge = new plugins.Merge([veggies, noop]);
+
+      builder = new Builder(merge);
+      builder.build().then(() => {
+        const json = heimdall.toJSON();
+
+        expect(json.nodes.length).to.equal(5);
+
+        // We can't use the actual times when doing a deep equal
+        for (let node of json.nodes) {
+          node.stats.time.self = 0;
+        }
+
+        expect(json).to.deep.equal({
+          nodes: [
+            {
+              _id: 0,
+              id: {
+                name: 'heimdall',
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                },
+              },
+              children: [1, 2, 3, 4],
+            },
+            {
+              _id: 1,
+              id: {
+                name: `WatchedDir (test/fixtures/basic; string node)`,
+                broccoliCachedNode: true,
+                broccoliId: 0,
+                broccoliNode: true,
+                broccoliPluginName: `WatchedDir`,
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                },
+              },
+              children: [],
+            },
+            {
+              _id: 2,
+              id: {
+                name: `VeggiesPlugin (Eat your greens)`,
+                broccoliCachedNode: true,
+                broccoliId: 1,
+                broccoliNode: true,
+                broccoliPluginName: `VeggiesPlugin`,
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                },
+              },
+              children: [],
+            },
+            {
+              _id: 3,
+              id: {
+                name: `NoopPlugin`,
+                broccoliCachedNode: true,
+                broccoliId: 2,
+                broccoliNode: true,
+                broccoliPluginName: `NoopPlugin`,
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                },
+              },
+              children: [],
+            },
+            {
+              _id: 4,
+              id: {
+                name: `MergePlugin`,
+                broccoliCachedNode: true,
+                broccoliId: 3,
+                broccoliNode: true,
+                broccoliPluginName: `MergePlugin`,
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                },
+              },
+              children: [],
+            },
+          ],
+        });
+        done();
+      });
     });
   });
 });
