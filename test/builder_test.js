@@ -902,7 +902,7 @@ describe('Builder', function() {
   });
 
   describe('heimdall stats', function() {
-    it('produces stats', function(done) {
+    it('produces stats', function() {
       const veggies = new plugins.Veggies(['test/fixtures/basic'], {
         annotation: 'Eat your greens',
       });
@@ -910,7 +910,7 @@ describe('Builder', function() {
       const merge = new plugins.Merge([veggies, sleep]);
 
       builder = new Builder(merge);
-      builder.build().then(() => {
+      return builder.build().then(() => {
         const json = heimdall.toJSON();
 
         expect(json.nodes.length).to.equal(5);
@@ -1011,7 +1011,6 @@ describe('Builder', function() {
             },
           ],
         });
-        done();
       });
     });
   });
