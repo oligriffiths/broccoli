@@ -906,8 +906,8 @@ describe('Builder', function() {
       const veggies = new plugins.Veggies(['test/fixtures/basic'], {
         annotation: 'Eat your greens',
       });
-      const noop = new plugins.Noop(['test/fixtures/basic']);
-      const merge = new plugins.Merge([veggies, noop]);
+      const sleep = new plugins.Sleeping(['test/fixtures/basic']);
+      const merge = new plugins.Merge([veggies, sleep]);
 
       builder = new Builder(merge);
       builder.build().then(() => {
@@ -918,6 +918,7 @@ describe('Builder', function() {
         // We can't use the actual times when doing a deep equal
         for (let node of json.nodes) {
           node.stats.time.self = 0;
+          node.stats.time.duration = 0;
         }
 
         expect(json).to.deep.equal({
@@ -931,40 +932,61 @@ describe('Builder', function() {
                 own: {},
                 time: {
                   self: 0,
+                  duration: 0,
                 },
               },
-              children: [1, 2, 3, 4],
+              children: [4],
             },
             {
-              _id: 1,
+              _id: 4,
               id: {
-                name: `WatchedDir (test/fixtures/basic; string node)`,
-                broccoliCachedNode: true,
-                broccoliId: 0,
+                name: 'MergePlugin',
                 broccoliNode: true,
-                broccoliPluginName: `WatchedDir`,
+                broccoliId: 3,
+                broccoliCachedNode: true,
+                broccoliPluginName: 'MergePlugin',
               },
               stats: {
                 own: {},
                 time: {
                   self: 0,
+                  duration: 0,
                 },
               },
-              children: [],
+              children: [2, 3],
             },
             {
               _id: 2,
               id: {
-                name: `VeggiesPlugin (Eat your greens)`,
-                broccoliCachedNode: true,
-                broccoliId: 1,
+                name: 'VeggiesPlugin (Eat your greens)',
                 broccoliNode: true,
-                broccoliPluginName: `VeggiesPlugin`,
+                broccoliId: 1,
+                broccoliCachedNode: true,
+                broccoliPluginName: 'VeggiesPlugin',
               },
               stats: {
                 own: {},
                 time: {
                   self: 0,
+                  duration: 0,
+                },
+              },
+              children: [1],
+            },
+            {
+              _id: 1,
+              id: {
+                name: 'WatchedDir (test/fixtures/basic; string node)',
+                broccoliNode: true,
+                broccoliId: 0,
+                broccoliCachedNode: true,
+                broccoliPluginName: 'WatchedDir',
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                  duration: 0,
                 },
               },
               children: [],
@@ -972,33 +994,17 @@ describe('Builder', function() {
             {
               _id: 3,
               id: {
-                name: `NoopPlugin`,
-                broccoliCachedNode: true,
+                name: 'SleepingPlugin',
+                broccoliNode: true,
                 broccoliId: 2,
-                broccoliNode: true,
-                broccoliPluginName: `NoopPlugin`,
-              },
-              stats: {
-                own: {},
-                time: {
-                  self: 0,
-                },
-              },
-              children: [],
-            },
-            {
-              _id: 4,
-              id: {
-                name: `MergePlugin`,
                 broccoliCachedNode: true,
-                broccoliId: 3,
-                broccoliNode: true,
-                broccoliPluginName: `MergePlugin`,
+                broccoliPluginName: 'SleepingPlugin',
               },
               stats: {
                 own: {},
                 time: {
                   self: 0,
+                  duration: 0,
                 },
               },
               children: [],
