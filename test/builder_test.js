@@ -964,6 +964,7 @@ describe('Builder', function() {
               _id: 4,
               id: {
                 name: 'MergePlugin',
+                label: 'MergePlugin',
                 broccoliNode: true,
                 broccoliId: 3,
                 broccoliCachedNode: false,
@@ -982,6 +983,7 @@ describe('Builder', function() {
               _id: 2,
               id: {
                 name: 'VeggiesPlugin (Eat your greens)',
+                label: 'VeggiesPlugin (Eat your greens)',
                 broccoliNode: true,
                 broccoliId: 1,
                 broccoliCachedNode: false,
@@ -999,7 +1001,8 @@ describe('Builder', function() {
             {
               _id: 1,
               id: {
-                name: 'WatchedDir (test/fixtures/basic; string node)',
+                name: 'test/fixtures/basic',
+                label: 'WatchedDir (test/fixtures/basic; string node)',
                 broccoliNode: true,
                 broccoliId: 0,
                 broccoliCachedNode: false,
@@ -1018,6 +1021,7 @@ describe('Builder', function() {
               _id: 3,
               id: {
                 name: 'SleepingPlugin',
+                label: 'SleepingPlugin',
                 broccoliNode: true,
                 broccoliId: 2,
                 broccoliCachedNode: false,
@@ -1035,7 +1039,8 @@ describe('Builder', function() {
             {
               _id: 5,
               id: {
-                name: 'WatchedDir (test/fixtures/basic; string node)',
+                name: 'test/fixtures/basic',
+                label: 'WatchedDir (test/fixtures/basic; string node)',
                 broccoliNode: true,
                 broccoliId: 0,
                 broccoliCachedNode: true,
