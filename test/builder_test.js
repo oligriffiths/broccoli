@@ -903,6 +903,17 @@ describe('Builder', function() {
 
   describe('heimdall stats', function() {
     it('produces stats', function() {
+      const timeAssert = function(parentNode, childNodes) {
+        expect(parentNode.stats.time.self).to.be.a('number');
+
+        let childTime = childNodes.reduce(
+          (accumulator, node) => accumulator + node.stats.time.self,
+          0
+        );
+
+        expect(parentNode.stats.time.self).to.be.equal(childTime + parentNode.stats.time.duration);
+      };
+
       const veggies = new plugins.Veggies(['test/fixtures/basic'], {
         annotation: 'Eat your greens',
       });
@@ -913,7 +924,19 @@ describe('Builder', function() {
       return builder.build().then(() => {
         const json = heimdall.toJSON();
 
-        expect(json.nodes.length).to.equal(5);
+        expect(json.nodes.length).to.equal(6);
+
+        const rootNode = json.nodes[0];
+        const mergeNode = json.nodes[1];
+        const veggiesNode = json.nodes[2];
+        const sleepingNode = json.nodes[4];
+        const sourceNode = json.nodes[3];
+        const sourceNode2 = json.nodes[5];
+
+        timeAssert(rootNode, [mergeNode]);
+        timeAssert(mergeNode, [veggiesNode, sleepingNode]);
+        timeAssert(veggiesNode, [sourceNode]);
+        timeAssert(sleepingNode, [sourceNode2]);
 
         // We can't use the actual times when doing a deep equal
         for (let node of json.nodes) {
@@ -999,6 +1022,24 @@ describe('Builder', function() {
                 broccoliId: 2,
                 broccoliCachedNode: true,
                 broccoliPluginName: 'SleepingPlugin',
+              },
+              stats: {
+                own: {},
+                time: {
+                  self: 0,
+                  duration: 0,
+                },
+              },
+              children: [5],
+            },
+            {
+              _id: 5,
+              id: {
+                name: 'WatchedDir (test/fixtures/basic; string node)',
+                broccoliNode: true,
+                broccoliId: 0,
+                broccoliCachedNode: true,
+                broccoliPluginName: 'WatchedDir',
               },
               stats: {
                 own: {},
