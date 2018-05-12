@@ -910,10 +910,10 @@ describe('Builder', function() {
         // the actual results of process.hrtime() are not
         // reliable
         if (process.env.CI !== 'true') {
-          expect(a).to.be.within(b, b + 5e6);
+          expect(a).to.be.within(b, b + 10e6);
         }
       };
-      
+
       const timeTotalAssert = function(parentNode, childNodes) {
         expect(parentNode.stats.time.self).to.be.a('number');
 
