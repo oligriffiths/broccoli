@@ -982,7 +982,7 @@ describe('Builder', function() {
             {
               _id: 2,
               id: {
-                name: 'VeggiesPlugin (Eat your greens)',
+                name: 'Eat your greens',
                 label: 'VeggiesPlugin (Eat your greens)',
                 broccoliNode: true,
                 broccoliId: 1,
