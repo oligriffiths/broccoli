@@ -929,7 +929,7 @@ describe('Builder', function() {
         annotation: 'Eat your greens',
       });
       const sleep = new plugins.Sleeping(['test/fixtures/basic']);
-      const sleep2 = new plugins.Sleeping(['test/fixtures/basic'], {sleep: 20});
+      const sleep2 = new plugins.Sleeping(['test/fixtures/basic'], { sleep: 20 });
       const merge = new plugins.Merge([veggies, sleep, sleep2]);
 
       builder = new Builder(merge);
@@ -937,7 +937,7 @@ describe('Builder', function() {
         const json = heimdall.toJSON();
 
         expect(json.nodes.length).to.equal(8);
-        
+
         const rootNode = json.nodes[0];
         const mergeNode = json.nodes[1];
         const veggiesNode = json.nodes[2];
@@ -948,13 +948,13 @@ describe('Builder', function() {
 
         const sleepingNode2 = json.nodes[6];
         const sourceNode3 = json.nodes[7];
-        
+
         timeTotalAssert(rootNode, [mergeNode]);
         timeTotalAssert(mergeNode, [veggiesNode, sleepingNode, sleepingNode2]);
         timeTotalAssert(veggiesNode, [sourceNode]);
         timeTotalAssert(sleepingNode, [sourceNode2]);
         timeTotalAssert(sleepingNode2, [sourceNode3]);
-        
+
         timeEqualAssert(sleepingNode.stats.time.self, 10e6);
         timeEqualAssert(sleepingNode2.stats.time.self, 20e6);
 
